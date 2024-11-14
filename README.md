@@ -19,6 +19,19 @@ I keep forgetting to turn on that light over and over, having to get my phone an
 
 I decided to build this project, a system that checks for camera usage on my compter and a controller to turn on and off the spotlight.
 
+The resulting main function (using addtional components) is the following:
+
+```go
+func main() {
+	for {
+		cameraStatus := checkCameraStatus()
+		_ = TurnSpotlightTo(cameraStatus)
+
+		time.Sleep(1 * time.Second)
+	}
+}
+```
+
 # Live demo
 
 <img width="675" alt="image" src="https://github.com/user-attachments/assets/aad3d8cb-6617-4053-9e11-b51443ff5590">
