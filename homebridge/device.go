@@ -1,4 +1,4 @@
-package main
+package homebridge
 
 import (
 	"net/http"
@@ -8,7 +8,6 @@ import (
 )
 
 var deviceUniqueId = os.Getenv("DEVICE_UNIQUE_ID")
-var bearerToken = os.Getenv("HOMEBRIDGE_TOKEN")
 
 func TurnSpotlightTo(status bool) error {
 	// Build data
@@ -23,9 +22,15 @@ func TurnSpotlightTo(status bool) error {
 		return err
 	}
 
-	// Authenticate request
-	req.Header.Add("Authorization", "Bearer "+bearerToken)
+	// Required content type
 	req.Header.Add("Content-Type", "application/json")
+
+	// Authenticate request
+	token, err := getAccessToken()
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	// Perform request
 	_, err = client.Do(req)
