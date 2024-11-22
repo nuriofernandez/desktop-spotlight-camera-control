@@ -2,12 +2,10 @@ package homebridge
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 var deviceUniqueId = os.Getenv("DEVICE_UNIQUE_ID")
@@ -46,12 +44,6 @@ func TurnSpotlightTo(status bool) error {
 	if res.StatusCode == 401 {
 		clearSession() // Clear session in case it's expired
 		return errors.New(res.Status)
-	}
-
-	// In case the status code is not 200, wait 10 seconds (to avoid too many calls)
-	if res.StatusCode != 201 {
-		time.Sleep(10 * time.Second)
-		return fmt.Errorf("Homebridge status code: %s\n", res.Status)
 	}
 
 	// No error, function end
