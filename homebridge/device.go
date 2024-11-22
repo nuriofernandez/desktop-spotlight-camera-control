@@ -31,7 +31,6 @@ func TurnSpotlightTo(status bool) error {
 	// Authenticate request
 	token, err := getAccessToken()
 
-	token = "ad"
 	if err != nil {
 		return err
 	}
@@ -50,7 +49,7 @@ func TurnSpotlightTo(status bool) error {
 	}
 
 	// In case the status code is not 200, wait 10 seconds (to avoid too many calls)
-	if res.StatusCode != 200 {
+	if res.StatusCode != 201 {
 		time.Sleep(10 * time.Second)
 		return fmt.Errorf("Homebridge status code: %s\n", res.Status)
 	}
