@@ -9,7 +9,7 @@ func getAccessToken() (string, error) {
 	// Check if session expires in this minute
 	currentTime := time.Now().Add(time.Minute)
 	if currentTime.After(homebridgeSessionExpire) {
-		homebridgeToken = ""
+		clearSession()
 	}
 
 	// Use current session token
@@ -29,4 +29,8 @@ func getAccessToken() (string, error) {
 
 	// Return the stored session
 	return homebridgeToken, nil
+}
+
+func clearSession() {
+	homebridgeToken = ""
 }

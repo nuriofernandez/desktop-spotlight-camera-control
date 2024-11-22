@@ -1,10 +1,13 @@
 package homebridge
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var deviceUniqueId = os.Getenv("DEVICE_UNIQUE_ID")
@@ -27,15 +30,29 @@ func TurnSpotlightTo(status bool) error {
 
 	// Authenticate request
 	token, err := getAccessToken()
+
+	token = "ad"
 	if err != nil {
 		return err
 	}
 	req.Header.Add("Authorization", "Bearer "+token)
 
 	// Perform request
-	_, err = client.Do(req)
+	res, err := client.Do(req)
 	if err != nil {
 		return err
+	}
+
+	// In case of an auth issue, clear the session.
+	if res.StatusCode == 401 {
+		clearSession() // Clear session in case it's expired
+		return errors.New(res.Status)
+	}
+
+	// In case the status code is not 200, wait 10 seconds (to avoid too many calls)
+	if res.StatusCode != 200 {
+		time.Sleep(10 * time.Second)
+		return fmt.Errorf("Homebridge status code: %s\n", res.Status)
 	}
 
 	// No error, function end
